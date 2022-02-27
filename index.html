@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>Anthony Kolber, Internet, Graphic Design, Programming</title>
+  <meta content="width=device-width" name="viewport">
+  <style>
+  :root {
+    --highlight: hsl(243,100%,50%);
+  }
+    html {
+      font-size: 1.75vw;
+    }
+    body {
+      font-family: 'Union Regular', sans-serif;
+      margin: 0;
+      color: black;
+      line-height: 1.15;
+      letter-spacing: -0.025em;
+      text-rendering: optimizeLegibility;
+    }
+    h1, h2, h3, h4 {
+      margin: 0;
+      line-height: 1.1;
+    }
+    h1, h3 {
+      font-size: 2.4rem;
+      line-height: 1;
+      margin-bottom: 50px;
+      background: var(--highlight);
+      /* -webkitbluext-stroke: 2px white; */
+      /* color: var(--highlight); */
+    }
+    h2 {
+      font-size: 0.6rem;
+      letter-spacing: -0.01em;
+      font-weight: normal;
+      margin-bottom: 50px;
+      text-align: center;
+    }
+    h3 {
+      margin-top: 50px;
+      font-size: 2rem;
+    }
+    h4 {
+      font-size: 0.6rem;
+      letter-spacing: -0.01em;
+      font-weight: normal;
+    }
+    p {
+      font-size: 1.15rem;
+      margin: 0;
+    }
+    a {
+      font: inherit;
+      color: inherit;
+      text-decoration: none;
+      transition: color 130ms cubic-bezier(.645,.045,.355,1);
+    }
+    a:hover {
+      color: var(--highlight);
+    }
+    em {
+      /*
+      color: black;
+      background: yellow;
+      */
+      font-style: normal;
+    }
+    i {
+      display: inline-block;
+      font-style: normal;
+      transform: skewX(6deg);
+    }
+    canvas {
+      position: absolute;
+      z-index: 3;
+      background: transparent;
+      width: calc(45vw - 30px);
+      top: 0;
+      left: 0;
+      opacity: 0;
+      transition: opacity 110ms cubic-bezier(.645,.045,.355,1);
+    }
+    .loaded-waves canvas {
+      opacity: 1;
+    }
+    .underline {
+      border-bottom: 0.075em solid;
+    }
+    .left, .right {
+      box-sizing: border-box;
+      width: 50vw;
+      min-height: 100vh;
+      padding: 20px 30px;
+      -webkit-font-smoothing: antialiased;
+    }
+    .left {
+      counter-reset: item;
+      padding-right: 2rem;
+    }
+    .right {
+      background: var(--highlight);
+      color: white;
+      position: fixed;
+      right: 0;
+      top: 0;
+      display: flex;
+      width: 50%;
+      flex-direction: column;
+      overflow: visible;
+    }
+    .right h2 {
+      position: relative;
+      z-index: 4;
+    }
+    .right h1 {
+      text-transform: uppercase;
+      font-weight: normal;
+      transition: opacity 210ms cubic-bezier(.645,.045,.355,1);
+      opacity: 0;
+    }
+    .loading-waves .right h1 {
+      opacity: 0;
+    }
+    .right h4 {
+      margin-top: auto;
+    }
+    .right .gallery {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #efefef;
+      opacity: 0;
+      z-index: 5;
+      pointer-events: none;
+      border-left: 1px solid black;
+      transition: opacity 0s cubic-bezier(.645,.045,.355,1);
+    }
+    .hovering .right .gallery {
+      opacity: 1;
+    }
+    .right .gallery .image {
+      background-size: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      transition: opacity 0s ease;
+    }
+    /*
+    .right .gallery .image.hide {
+      opacity: 0;
+    }
+    .right .gallery .image {
+      transition-delay: 0;
+    }
+    .right .gallery .image.hiding {
+      opacity: 0 !important;
+      transition-delay: 500ms;
+    }
+    .right .gallery .image.hiding:last-child {
+      opacity: 1 !important;
+      transition-delay: 0;
+    }
+    */
+
+    .right .gallery .image {
+      opacity: 0 !important;
+      transition-delay: 0s !important;
+      transition-duration: 0s !important;
+    }
+    .right .gallery[data-index='0'] .image:nth-child(1) { opacity: 1 !important; }
+    .right .gallery[data-index='1'] .image:nth-child(2) { opacity: 1 !important; }
+    .right .gallery[data-index='2'] .image:nth-child(3) { opacity: 1 !important; }
+    .right .gallery[data-index='3'] .image:nth-child(4) { opacity: 1 !important; }
+    .right .gallery[data-index='4'] .image:nth-child(5) { opacity: 1 !important; }
+    .right .gallery[data-index='5'] .image:nth-child(6) { opacity: 1 !important; }
+
+    .left p {
+      clear: both;
+      counter-increment: item;
+      cursor: vertical-text;
+      overflow: hidden;
+      padding-left: 12.5%;
+      position: relative;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+      -webkit-hyphens: auto;
+      -ms-hyphens: auto;
+      hyphens: auto;
+      margin-bottom: 0;
+      display: inline;
+      transition: opacity 210ms cubic-bezier(.645,.045,.355,1);
+    }
+    .left > p {
+      cursor: auto;
+    }
+    .left .images img {
+      display: none;
+    }
+    @media (min-width: 1019px) {
+      .hovering .left p:hover {
+        opacity: 1;
+      }
+      .hovering .left p:hover a {
+        text-decoration: none;
+        transition: text-decoration 210ms cubic-bezier(.645,.045,.355,1);
+      }
+      .hovering .left p:hover a {
+        text-decoration: underline;
+      }
+      .left .images img {
+        position: absolute;
+        visibility: hidden;
+        point-events: none;
+      }
+      .hovering .left p {
+        opacity: 0.05;
+      }
+    }
+
+    .left p a span {
+      font-size: 1.2em;
+    }
+    .left p span.div:before {
+      content: '\25cf';
+      padding: 0 0.15em;
+    }
+    .left p .title:before {
+      content: "" counter(item) ".";
+      content: "\2474\00a0";
+      font-size: 0.6em;
+      margin-right: 0.3em;
+      position: relative;
+      top: -0.3em;
+    }
+    .left p:nth-child(2) .title:before { content: "\2475\00a0"; }
+    .left p:nth-child(3) .title:before { content: "\2476\00a0"; }
+    .left p:nth-child(4) .title:before { content: "\2477\00a0"; }
+    .left p:nth-child(5) .title:before { content: "\2478\00a0"; }
+    .left p:nth-child(6) .title:before { content: "\2479\00a0"; }
+    .left p:nth-child(7) .title:before { content: "\247a\00a0"; }
+    .left p:nth-child(8) .title:before { content: "\247b\00a0"; }
+    .left p:nth-child(9) .title:before { content: "\247c\00a0"; }
+    .left p:nth-child(10) .title:before { content: "\247d\00a0"; }
+    .left p:nth-child(11) .title:before { content: "\247e\00a0"; }
+    .left p:nth-child(12) .title:before { content: "\247f\00a0"; }
+    .left p:nth-child(13) .title:before { content: "\2480\00a0"; }
+    .left p:nth-child(14) .title:before { content: "\2481\00a0"; }
+    .left p:nth-child(15) .title:before { content: "\2482\00a0"; }
+    .left p:nth-child(16) .title:before { content: "\2483\00a0"; }
+    .left p:nth-child(17) .title:before { content: "\2484\00a0"; }
+    .left p:nth-child(18) .title:before { content: "\2485\00a0"; }
+    .left p:nth-child(19) .title:before { content: "\2486\00a0"; }
+    .left p:nth-child(20) .title:before { content: "\2487\00a0"; }
+
+    .left .image-wrap {
+      display: inline-block;
+      width: 1em;
+      height: 1em;
+      overflow: hidden;
+      position: absolute;
+      transform: translateX(-100%);
+      margin-top: 0.05em;
+      background-color: var(--highlight);
+      opacity: 0;
+      /*box-shadow: 3px 3px 0 0 var(--highlight);*/
+    }
+    .left img {
+      width: 100%;
+      mix-blend-mode: screen;
+      filter: grayscale(1);
+      border: 0;
+    }
+    .left .title {
+      display: inline;
+      color: var(--highlight);
+      /*transform: skewX(6deg);*/
+    }
+    @media (max-width: 1020px) {
+      html {
+        font-size: 18px;
+      }
+      body {
+        display: flex;
+        flex-direction: column-reverse;
+      }
+      .left, .right {
+        padding: 10px 10px;
+        overflow-x: hidden;
+        width: 100%;
+      }
+      .left p a {
+        text-decoration: underline;
+      }
+      .right {
+        position: static;
+        min-height: 50vh;
+      }
+      .right canvas {
+        left: -10px;
+        position: absolute;
+        max-height: 40vh;
+        width: 90vw;
+        height: auto;
+      }
+      .gallery {
+        display: none !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="left">
+    <h2>Work</h2>
+    <p>
+      I’m a designer∕developer working out of Melbourne, Australia. I run a small collaborative practice, operating somewhere within the intersection of graphic design and programming. Below is a collection of some of projects I’ve worked on.
+    </p>
+    <br>
+    <br>
+    <div class="projects"></div>
+    <br>
+    <br>
+    <br>
+    <br>
+    <h4>&copy; Anthony Kolber, January 2020.</h4>
+  </div>
+  <div class="right">
+    <div class="gallery"></div>
+    <h2>Information</h2>
+    <h1>Anthony Kolber,<br>
+      Internet,<br>
+      Graphic Design,<br>
+      Programming,<br>
+    </h1>
+    <h4>
+      <a class="underline" href="mailto:hi@kolber.info">hi@kolber.info</a> ∕ <a class="underline" href="https://twitter.com/kolber" target="_blank">@kolber</a><br>
+      <br>
+      Melbourne, Australia
+    </h4>
+  </div>
+</body>
+
+<script type="text/javascript" src="pixi.min.js"></script>
+<script src="./pixi-filters.js"></script>
+<script src="./TweenMax.min.js"></script>
+
+<script type="text/javascript">
+    // Setup
+    const app = new PIXI.Application({
+      backgroundColor: '0x2419e6',
+      width: 1400,
+      height: 1000,
+      resolution: 2
+    });
+
+    const renderer = new PIXI.autoDetectRenderer(window.innerWidth/2, window.innerHeight, { transparent: true });
+
+    // Load image onto stage
+    var sprite = new PIXI.Sprite.from('./images/text.png')
+    sprite.width = 1400,
+    sprite.height = 1200,
+    app.stage.addChild(sprite)
+
+    // Get wavy 
+    const autoPlaySpeed = [3, 1.5];
+    const displacementSprite = new PIXI.Sprite.from('./images/clouds.jpg');
+    const displacementFilter = new PIXI.filters.DisplacementFilter(displacementSprite);
+    displacementSprite.texture.baseTexture.wrapMode = PIXI.WRAP_MODES.REPEAT;
+    app.stage.filters = [displacementFilter];
+    app.stage.addChild(displacementSprite);
+    displacementSprite.x = renderer.width / 2;
+    displacementSprite.y = renderer.height / 2;
+
+    // Animate the wave
+    const ticker = new PIXI.Ticker();
+    ticker.autoStart = true
+    ticker.add(function(delta) {
+      displacementSprite.x += autoPlaySpeed[0] * (0.15);
+      displacementSprite.y += autoPlaySpeed[1];
+      renderer.render(app.stage);
+    })
+
+  // Click event
+  function rotateSprite() {
+    displacementSprite.rotation += 0.001;
+    intt = requestAnimationFrame(rotateSprite);
+  }
+
+  var mouseX, mouseY,
+      intt = false, animating = false;
+  sprite.interactive = true;
+
+  sprite.pointerover = function(mouseData){
+    if (animating) return;
+    animating = true;
+    mouseX = mouseData.data.global.x;
+    mouseY = mouseData.data.global.y;
+    TweenMax.to(displacementFilter.scale, 1.3,
+      {
+        x: "+=" + Math.sin( mouseX ) * 90 + "",
+        y: "+=" + Math.cos( mouseY ) * 90 + ""
+      }
+    )
+    //rotateSprite();
+  }
+
+  document.querySelector('.right').appendChild(app.view);
+
+  app.loader
+    .add('text','./images/text.png')
+    .add('clouds','./images/clouds.jpg')
+    .load(function() {
+      setTimeout(function() {
+        document.body.classList.add('loaded-waves')
+        document.querySelector('canvas').addEventListener('mouseout', function(mouseData){
+          TweenMax.to(displacementFilter.scale, 2.3, { x: 20, y: 20 });
+          cancelAnimationFrame(intt);
+          animating = false;
+        })
+      }, 250)
+    })
+</script>
+
+
+<script type="text/template" id="tpl">
+  <% for (var i=0;i<v.projects.length;i++) { %>
+    <% var p = v.projects[i] %>
+    <p onmouseover="enterImage(this)" onmouseout="exitImage()">
+      <span class="images">
+        <% for (var j=1;j<p.images+1;j++) { %>
+          <span class="image" style="background-image: url('images/<%= p.id %><%= j %>.<%= supportsWebp ? 'webp' : 'png' %>')" /></span>
+        <% } %>
+      </span>
+      <span class="title"><%= p.title %></span>
+      <span class="div"></div>&nbsp;<em><%= p.me.replace('<br>', ' &#x25cf; ') %></em>
+      <% if (p.notes.length) { %>
+        <span class="div"></div></div>&nbsp;<%= p.notes.replace('<br>', ' &#x25cf; ') %>
+      <% } %>
+      <span class="div"></div>&nbsp;Technical: <%= p.tech %>
+      <% if (p.url.indexOf('http') > -1) { %>
+        <span class="div"></div>&nbsp;<a href="<%= p.url %>" target="_blank"><%= p.url %></a>
+      <% } else { %>
+        <span class="div"></div>&nbsp;<%= p.url %>
+      <% } %>
+    </p>
+  <% } %>
+</script>
+<script>
+
+var int = null,
+    timer = 2100,
+    index = 0,
+    $gallery = document.querySelector('.gallery')
+
+function galleryUpdate(index) {
+  var visible = this.querySelectorAll('.image:not(.hide)')
+  if (visible.length > 1) {
+    visible[visible.length-1].classList.add('hide')
+  } else {
+    var all = this.querySelectorAll('.image')
+    for (var i = 0, l = all.length; i < l; i++) {
+      all[i].classList.add('hiding')
+      all[i].classList.remove('hide')
+      setTimeout(function(el) {
+        el.classList.remove('hiding')
+      }, timer/2, all[i])
+    }
+  }
+}
+
+function enterImage(image) {
+  document.body.classList.add('hovering')
+  $gallery.innerHTML = image.querySelector('.images').innerHTML
+  //int = setInterval(galleryUpdate.bind($gallery), timer)
+}
+function exitImage() {
+  //clearInterval(int)
+  document.body.classList.remove('hovering')
+}
+
+var supportsWebp = (async function() {
+  if (!self.createImageBitmap) return false;
+  const webpData = 'data:image/webp;base64,UklGRh4AAABXRUJQVlA4TBEAAAAvAAAAAAfQ//73v/+BiOh/AAA=';
+  const blob = await fetch(webpData).then(r => r.blob());
+  return createImageBitmap(blob).then(() => true, () => false);
+})()
+
+var tmpl = function(a){return Function("v,o","o="+JSON.stringify(a).replace(/<%=(.+?)%>/g,'"+($1)+"').replace(/<%(.+?)%>/g,'";$1\no+="')+";return o")}
+var $ = document.querySelector.bind(document)
+var $ed = $('#tpl'), $result = $('.projects')
+function render() {
+  var render = tmpl($ed.text)  // compile template
+  $result.innerHTML = render({
+    projects: [
+      {
+        id:    'bhs',
+        title: 'Blackhearts & Sparrows',
+        me:    'Design + Frontend development + Brand direction',
+        notes: '',
+        tech:  'Liquid / Ruby',
+        url:   'https://www.blackheartsandsparrows.com.au/',
+        images: 4
+      },
+      {
+        id:    'tsp',
+        title: 'The Saturday Paper',
+        me:    'Design + Frontend development',
+        notes: 'Brand by Studio Round<br>Backend development collaboration w/ in-house developers',
+        tech:  'Drupal / PHP',
+        url:   'https://www.thesaturdaypaper.com.au/',
+        images: 5
+      },
+      {
+        id:    'tm',
+        title: 'The Monthly',
+        me:    'Design + Frontend development',
+        notes: 'Brand by Public Office<br>Backend development collaboration w/ in-house developers',
+        tech:  'Drupal / PHP',
+        url:   'https://www.themonthly.com.au/',
+        images: 4
+      },
+      {
+        id:    'mantle',
+        title: 'MAN–TLE',
+        me:    'Design + Frontend / Backend development',
+        notes: '',
+        tech:  'Custom Shopify / Ruby / Liquid',
+        url:   'https://man-tle.com/',
+        images: 4
+      },
+      {
+        id:    'today',
+        title: 'Today Design',
+        me:    'Front-end development + Design prototyping<br>Collaboration with Today',
+        notes: 'Design by Today',
+        tech:  'React / Node / Javascript',
+        url:   'https://today.design/',
+        images: 4
+      },
+      {
+        id:    'hh',
+        title: 'Hotel Hotel',
+        me:    'Frontend + Backend development',
+        notes: 'Design collaboration with U-P Studio',
+        tech:  'Wordpress / PHP',
+        url:   'https://www.hotel-hotel.com.au/',
+        images: 7
+      },
+      {
+        id:    'aeon',
+        title: 'Aeon Magazine',
+        me:    'Design + Creative direction + Frontend development',
+        notes: 'Position: Technical + Design director (2014&thinsp;&ndash;&thinsp;2016)',
+        tech:  'Ruby on Rails / React',
+        url:   'https://aeon.co/',
+        images: 4
+      },
+      //{
+      //  id:    'mom',
+      //  title: 'Momentum Energy',
+      //  me:    'Frontend + Design collaboration',
+      //  notes: 'Design by MASS',
+      //  tech:  'React / Node / Express',
+      //  url:   'https://www.momentumenergy.com.au/',
+      //  images: 4
+      //},
+      {
+        id:    'ccp',
+        title: 'Centre for Contemporary Photography (at Public Office)',
+        me:    'Frontend + Backend development + Design collaboration (w/ Public Office)',
+        notes: 'Design by Public Office',
+        tech:  'Kirby / PHP',
+        url:   'https://ccp.org.au/',
+        images: 5
+      },
+      {
+        id:    'po',
+        title: 'Public Office',
+        me:    'Design + Frontend + Backend development',
+        notes: 'Position: Owner Partner (2017&thinsp;&ndash;&thinsp;2018)',
+        tech:  'Javascript / Kirby / PHP',
+        url:   'https://public-office.info',
+        images: 2
+      },
+      {
+        id:    '7am',
+        title: '7am Podcast',
+        me:    'Frontend + Backend development',
+        notes: 'Design by Maud',
+        tech:  'Kirby / PHP',
+        url:   'https://7ampodcast.com.au/',
+        images: 4
+      },
+      {
+        id:    're',
+        title: 'Re:collection',
+        me:    'Frontend + Backend development (w/ Public Office)',
+        notes: 'Design by Public Office + Dominic Hofstede + Warren Taylor',
+        tech:  'Kirby / PHP',
+        url:   'https://recollection.com.au/',
+        images: 5
+      },
+      //{
+      //  id:    'tc',
+      //  title: 'The Conversation',
+      //  me:    'Design + Frontend development (collaboration w/ in-house team)',
+      //  notes: 'Backend planning + development w/ development team',
+      //  tech:  'Ruby on Rails / Node',
+      //  url:   'http://theconversation.com/au',
+      //  images: 2
+      //},
+      {
+        id:    'so',
+        title: 'Someones&copy;',
+        me:    'Position: Senior Design + Interface R&D (2010&thinsp;&ndash;&thinsp;2011)',
+        notes: 'Experimental interface design + build',
+        tech:  'Node / Javascript',
+        url:   'OFFLINE',
+        images: 3
+      },
+      {
+        id:    'nb',
+        title: 'Sneaker Freaker x NB574',
+        me:    'Frontend + Backend development',
+        notes: 'Design collaboration w/ Sneaker Freaker',
+        tech:  'Kirby / PHP',
+        url:   'https://www.sneakerfreaker.com/nb574/',
+        images: 5
+      },
+      {
+        id:    'un',
+        title: 'Un Magazine',
+        me:    'Design + Frontend + Backend development',
+        notes: '',
+        tech:  'Stacey / PHP',
+        url:   'http://unprojects.org.au/',
+        images: 3
+      },
+      //{
+      //  id:    'amd',
+      //  title: 'Air Max Day 2018 / Melbourne: on Air',
+      //  me:    'Frontend + Backend development',
+      //  notes: 'Design collaboration w/ Archetype Media',
+      //  tech:  'VueJS / Node',
+      //  url:   'http://www.melbourneonair.com/',
+      //  images: 3
+      //},
+      {
+        id:    'sg',
+        title: 'Stuart Geddes',
+        me:    'Frontend development',
+        notes: 'Design by Stuart Geddes',
+        tech:  'Stacey / PHP',
+        url:   'http://stuart.geddes.work/',
+        images: 3
+      },
+      {
+        id:    'wfb',
+        title: 'World Food Books (at Public Office)',
+        me:    'Frontend + Backend development (w/ Public Office)',
+        notes: 'Design by World Food Books',
+        tech:  'Express / Node / Javascript',
+        url:   'https://worldfoodbooks.com/',
+        images: 3
+      },
+      {
+        id:    'tn',
+        title: 'Tom Nicholson',
+        me:    'Frontend + Backend development',
+        notes: 'Design by Ziga Testen',
+        tech:  'Kirby / PHP',
+        url:   'http://tomn.net/',
+        images: 5
+      },
+
+
+    /*
+      {
+        id:    'aj',
+        title: 'A-Joints (at Public Office)',
+        me:    'Frontend development (w/ Public Office)',
+        notes: 'Design by Maud',
+        tech:  'React / Node / Javascript',
+        url:   'https://ajoints.com/',
+      },
+      {
+        id:    'pc',
+        title: 'PUSH Collective',
+        me:    'Frontend + Backend development + Design collaboration',
+        notes: 'Design by MASS',
+        tech:  'Kirby / PHP',
+        url:   'http://pushcollective.com/',
+      },
+      {
+        id:    'tt',
+        title: 'The Thousands',
+        me:    'Design + Frontend development',
+        notes: 'Brand by Rob Cordiner / Backend by Icelab',
+        tech:  'Liquid / Ruby',
+        url:   'OFFLINE'
+      },
+      {
+        id:    'mu',
+        title: 'Melbourne University / Course Finder',
+        me:    'Design direction + Frontend build',
+        notes: 'Backend planning + development w/ Melbourne Uni',
+        tech:  'Ruby on Rails',
+        url:   'OFFLINE',
+      },
+      {
+        id:    'ic',
+        title: 'In Canberra (Schwartz Media)',
+        me:    'Frontend + Backend development',
+        notes: 'Design by Mike Giesser',
+        tech:  'Kirby / PHP',
+        url:   'https://incanberra.schwartzmedia.com.au/',
+      },
+      {
+        id:    'am',
+        title: 'Archetype Media',
+        me:    'Frontend + Backend development',
+        notes: 'Design by Paul Allworthy',
+        tech:  'Kirby / PHP',
+        url:   'https://www.archety.pe/',
+      },
+      {
+        id:    'abch',
+        title: 'ABCH (at Public Office)',
+        me:    'Frontend development (w/ Public Office)',
+        notes: 'Design by Marcus Hollands',
+        tech:  'Custom Shopify / Ruby / Liquid',
+        url:   'https://abch.world/',
+      },
+    */
+    ]
+  })
+
+  var gallery = document.querySelector('.gallery')
+  var projectElems = document.querySelectorAll('.projects > p')
+  for (var i = 0, l = projectElems.length; i < l; i++) {
+    projectElems[i].addEventListener('mousemove', function(e) {
+      var rect = this.getClientRects()[0]
+      var imageCount = this.querySelectorAll('.images .image').length
+      var top = e.clientY - rect.top
+      var index = Math.floor((top / this.offsetHeight) / (1 / imageCount))
+      var oldIndex = gallery.getAttribute('data-index')
+      if (index !== oldIndex) gallery.setAttribute('data-index', index)
+    })
+  }
+
+}
+render()
+</script>
+
+</html>
